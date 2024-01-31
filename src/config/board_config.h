@@ -4,18 +4,35 @@
 #include "../task_info.h"
 
 // Define the number of boards and adjust this file accordingly
-#define NUM_BOARDS 3
+#define NUM_BOARDS 1
 
 // Board Roles
 /* Uncomment one of them */
-#define BOARD_ID 1
+#define BOARD_ID 0
+// #define BOARD_ID 1
 // #define BOARD_ID 2
 // #define BOARD_ID 3
 // #define BOARD_ID 4
 // #define BOARD_ID 5
 // #define UDP_TEST 4
 
-#if (BOARD_ID == 1)
+
+#if (BOARD_ID == 0)
+    #define BOARD_STR "0"
+    #define TEMP_HUM_PIN 8 
+    #define US_TRIG_PIN 13
+    #define US_ECHO_PIN 14
+    
+    // Tasks defined
+    #define HELLO_TASK 0
+    #define BUTTON_PUB 0
+    #define BUTTON_SUB 0
+    #define TEMP_HUM_PUB 0
+    #define ULTRA_SONIC_PUB 0
+    #define CLI_TASK 1
+
+    #define TASK_LIST {HELLO_TASK , BUTTON_PUB , BUTTON_SUB, TEMP_HUM_PUB, ULTRA_SONIC_PUB, CLI_TASK}
+#elif (BOARD_ID == 1)
     #define BOARD_STR "1"
     #define TEMP_HUM_PIN 8 
     #define US_TRIG_PIN 13

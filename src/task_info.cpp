@@ -6,6 +6,7 @@
 #include "tasks/button/button.h"
 #include "tasks/temp_hum_sensor/temp_hum.h"
 #include "tasks/ultra_sonic_sensor/ultra_sonic.h"
+#include "common/cli/cli.h"
 
 // Priority
 #define HELLO_MQTT_TASK_PRIORITY       10
@@ -13,6 +14,8 @@
 #define BUTTON_SUBSCRIBER_PRIORITY     10
 #define TEMP_HUM_PUBLISHER_PRIORITY    10
 #define ULTRA_SONIC_PUBLISHER_PRIORITY 10
+#define CLI_INPUT_PRIORITY 10
+
 
 // Stack Size
 #define HELLO_MQTT_TASK_STACK_SIZE       (1024 * 10)
@@ -20,6 +23,7 @@
 #define BUTTON_SUBSCRIBER_STACK_SIZE     (1024 * 10)
 #define TEMP_HUM_PUBLISHER_STACK_SIZE    2* (1024 * 10)
 #define ULTRA_SONIC_PUBLISHER_STACK_SIZE 2* (1024 * 10)
+#define CLI_INPUT_STACK_SIZE             (1024 * 10)
 
 // Task Handles
 TaskHandle_t hello_mqtt_handle;
@@ -27,7 +31,7 @@ TaskHandle_t button_pub_handle;
 TaskHandle_t button_sub_handle;
 TaskHandle_t temp_hum_pub_handle;
 TaskHandle_t ultra_sonic_pub_handle;
-
+TaskHandle_t cli_input_handle;
 
 QueueHandle_t temp_hum_ultra_sonic_queue;
 
@@ -84,6 +88,15 @@ static Task_Info task_stuct[]
         ULTRA_SONIC_PUBLISHER_PRIORITY, 
         &ultra_sonic_pub_handle,
         ULTRA_SONIC_PUBLISHER
+    },
+    {
+        &cli_input_task, 
+        "cli_input_task", 
+        CLI_INPUT_STACK_SIZE, 
+        NULL, 
+        CLI_INPUT_PRIORITY, 
+        &cli_input_handle,
+        CLI_INPUT
     },
     // Null Task to denote the end of the array
     {0}

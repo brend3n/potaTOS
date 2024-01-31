@@ -13,6 +13,7 @@ enum task_enums
     BUTTON_SUBSCRIBER,
     TEMP_HUM_PUBLISHER,
     ULTRA_SONIC_PUBLISHER,
+    CLI_INPUT,
     NUM_TASKS
 };
 

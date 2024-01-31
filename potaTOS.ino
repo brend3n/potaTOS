@@ -10,8 +10,10 @@
 #include "src/tasks/button/button.h"
 #include "src/tasks/mqtt/mqtt.h"
 #include "src/task_info.h"
+#include "src/common/utilities/utilities.h"
 
-extern PubSubClient client;
+// TODO: Move this elsewhere so common code isnt reliant on board specific tasks
+// extern PubSubClient client;
 
 void serial_init()
 {
@@ -34,22 +36,35 @@ void setup()
   // Initialize Serial for Debugging
   serial_init();
 
+  // TODO: Move this elsewhere so common code isnt reliant on board specific tasks
   // Initialize MQTT
-  mqtt_init();
+  // mqtt_init();
 
   // Allow the hardware to sort itself out
+  // vTaskDelay(pdMSTOTICKS(1500));
   delay(1500);
 
-  setup_global_objects();
+
+  // TODO: Move this elsewhere so common code isnt reliant on board specific tasks
+  // setup_global_objects();
 
   setup_tasks();
+  pinMode(LED_BUILTIN, OUTPUT);
 }
 
 void loop()
 {
-  if (!client.connected()) {
-    reconnect();
-  }
+  // TODO: Move this elsewhere so common code isnt reliant on board specific tasks
+  // if (!client.connected()) {
+  //   reconnect();
+  // }
+  // vTaskDelay(pdMSTOTICKS(2000));
+  digitalWrite(LED_BUILTIN, HIGH);
   delay(2000);
-  client.loop();
+  digitalWrite(LED_BUILTIN, LOW);
+  delay(2000);
+
+
+  // TODO: Move this elsewhere so common code isnt reliant on board specific tasks
+  // client.loop();
 }
