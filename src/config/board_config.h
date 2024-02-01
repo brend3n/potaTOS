@@ -22,7 +22,7 @@
     #define TEMP_HUM_PIN 8 
     #define US_TRIG_PIN 13
     #define US_ECHO_PIN 14
-    
+
     // Tasks defined
     #define HELLO_TASK 0
     #define BUTTON_PUB 0
@@ -31,7 +31,7 @@
     #define ULTRA_SONIC_PUB 0
     #define CLI_TASK 1
 
-    #define TASK_LIST {HELLO_TASK , BUTTON_PUB , BUTTON_SUB, TEMP_HUM_PUB, ULTRA_SONIC_PUB, CLI_TASK}
+    #define TASK_LIST { TASK_CLI, {0}}
 #elif (BOARD_ID == 1)
     #define BOARD_STR "1"
     #define TEMP_HUM_PIN 8 
