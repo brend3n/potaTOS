@@ -13,11 +13,13 @@ build:
 # Upload target
 upload:
 	@echo $(PORT)
+	sudo chmod a+rw $(PORT)
 	$(ARDUINO_CLI) upload --verbose -p $(PORT) --fqbn $(BOARD) $(SKETCH) 
 
 monitor:
 	@echo $(PORT)
 	@echo $(BAUD)
+	sudo chmod a+rw $(PORT)
 	minicom -D $(PORT) -b $(BAUD)
 #$(ARDUINO_CLI) monitor --port $(PORT) --config baudrate=$(BAUD)
 

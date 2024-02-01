@@ -2,10 +2,17 @@
 #define UTILS_H
 
 #include <Arduino.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-/* Tick rate in Hz */
-#define configTICK_RATE_HZ              ((TickType_t)1000)
-
-#define pdMSTOTICKS( xTimeInMs ) ( ( TickType_t ) xTimeInMs * ( configTICK_RATE_HZ / ( ( TickType_t ) 1000 ) ) )
+#define ASSERT(condition) \
+    do { \
+        if (!(condition)) { \
+            char temp_buf[100]; \
+            sprintf(temp_buf, "Assertion failed: %s, file %s, line %d\n", \
+                    #condition, __FILE__, __LINE__); \
+            Serial.println(temp_buf); \
+        } \
+    } while (0);
 
 #endif //UTILS_H

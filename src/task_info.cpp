@@ -1,6 +1,7 @@
 // Includes
 #include "task_info.h"
 #include "config/board_config.h"
+#include "common/utilities/utilities.h"
 
 #include "tasks/mqtt/mqtt.h"
 #include "tasks/button/button.h"
@@ -15,6 +16,7 @@
 #define TEMP_HUM_PUBLISHER_PRIORITY    10
 #define ULTRA_SONIC_PUBLISHER_PRIORITY 10
 #define CLI_INPUT_PRIORITY 10
+#define CLI_EXEC_PRIORITY 10
 
 
 // Stack Size
@@ -23,7 +25,8 @@
 #define BUTTON_SUBSCRIBER_STACK_SIZE     (1024 * 10)
 #define TEMP_HUM_PUBLISHER_STACK_SIZE    2* (1024 * 10)
 #define ULTRA_SONIC_PUBLISHER_STACK_SIZE 2* (1024 * 10)
-#define CLI_INPUT_STACK_SIZE             (1024 * 10)
+#define CLI_INPUT_STACK_SIZE             2*(1024 * 10)
+#define CLI_EXEC_STACK_SIZE              2* (1024 * 10)
 
 // Task Handles
 TaskHandle_t hello_mqtt_handle;
@@ -32,8 +35,10 @@ TaskHandle_t button_sub_handle;
 TaskHandle_t temp_hum_pub_handle;
 TaskHandle_t ultra_sonic_pub_handle;
 TaskHandle_t cli_input_handle;
+TaskHandle_t cli_exec_handle;
 
 QueueHandle_t temp_hum_ultra_sonic_queue;
+QueueHandle_t cli_cmd_queue;
 
 #define TASK_MQTT \
     { \
@@ -90,28 +95,40 @@ QueueHandle_t temp_hum_ultra_sonic_queue;
         ULTRA_SONIC_PUBLISHER \
     }
 
-#define TASK_CLI \
+#define TASK_IN_CLI \
     { \
         &cli_input_task, \
         "cli_input_task", \
         CLI_INPUT_STACK_SIZE, \
-        NULL, \
+        &cli_cmd_queue, \
         CLI_INPUT_PRIORITY, \
         &cli_input_handle, \
         CLI_INPUT \
     }
 
+#define TASK_EXEC_CLI \
+    { \
+        &cli_execute_task, \
+        "cli_exec_task", \
+        CLI_EXEC_STACK_SIZE, \
+        &cli_cmd_queue, \
+        CLI_EXEC_PRIORITY, \
+        &cli_exec_handle, \
+        CLI_EXEC \
+    }
+
+
+Task_Info task_t [] = TASK_LIST;
+
 // Returns 1 if all tasks registered, else returns 0
 uint32_t register_tasks(void)
 {
     uint32_t res = 1;    
-    Task_Info task_t [] = TASK_LIST;
 
     for (uint32_t i = 0; i < NUM_TASKS; i++)
     {
         if (task_t[i].handle)
         {
-
             BaseType_t ret_create = xTaskCreate(
                 task_t[i].entry_function, 
                 task_t[i].name,
@@ -120,6 +137,13 @@ uint32_t register_tasks(void)
                 task_t[i].priority,
                 task_t[i].handle
             );
+
+            if (ret_create != pdTRUE)
+            {
+                Serial.print("Failed to register ");
+                Serial.print(task_t[i].name);
+                Serial.println();
+            }
             
             res &= ret_create;
         }
@@ -135,6 +159,14 @@ void setup_global_objects(void)
     temp_hum_ultra_sonic_queue = xQueueCreate(10, sizeof(float));
     if(!temp_hum_ultra_sonic_queue)
     {
-        Serial.println("Queue failed to intialize.");
+        Serial.println("temp_hum_ultra_sonic_queue Queue failed to intialize.");
+    }
+
+    cli_cmd_queue = xQueueCreate(15, sizeof(char)*(MAX_STRING_BUFFER_SIZE));
+    // ASSERT(cli_cmd_queue != NULL);|
+
+    if (!cli_cmd_queue)
+    {
+        Serial.println("cli_cmd_queue Queue failed to initialize");
     }
 }

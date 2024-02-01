@@ -14,6 +14,7 @@ enum task_enums
     TEMP_HUM_PUBLISHER,
     ULTRA_SONIC_PUBLISHER,
     CLI_INPUT,
+    CLI_EXEC,
     NUM_TASKS
 };
 

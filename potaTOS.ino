@@ -28,7 +28,10 @@ void serial_init()
 
 void setup_tasks()
 {
-  register_tasks();
+  if (register_tasks() != pdTRUE)
+  {
+    Serial.println("Failed to register tasks");
+  }
 }
 
 void setup()
@@ -46,7 +49,7 @@ void setup()
 
 
   // TODO: Move this elsewhere so common code isnt reliant on board specific tasks
-  // setup_global_objects();
+  setup_global_objects();
 
   setup_tasks();
   pinMode(LED_BUILTIN, OUTPUT);
