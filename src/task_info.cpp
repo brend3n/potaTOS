@@ -9,6 +9,9 @@
 #include "tasks/ultra_sonic_sensor/ultra_sonic.h"
 #include "common/cli/cli.h"
 
+#include "common/p2p/p2p.h"
+#include "common/p2p/message_structure/p2p_message.h"
+
 // Priority
 #define HELLO_MQTT_TASK_PRIORITY       3
 #define BUTTON_PUBLISHER_PRIORITY      3
@@ -39,6 +42,11 @@ TaskHandle_t cli_exec_handle;
 
 QueueHandle_t temp_hum_ultra_sonic_queue;
 QueueHandle_t cli_cmd_queue;
+
+p2pNode p2p;
+QueueHandle_t p2p_tx_queue;
+QueueHandle_t p2p_rx_queue;
+
 
 #define TASK_MQTT \
     { \
@@ -169,4 +177,20 @@ void setup_global_objects(void)
     {
         Serial.println("cli_cmd_queue Queue failed to initialize");
     }
+
+    p2p_tx_queue = xQueueCreate(15, sizeof(p2pMessage_t));
+
+    if (!p2p_tx_queue)
+    {
+        Serial.println("p2p_tx_queue Queue failed to initialize");
+    }
+
+    p2p_rx_queue = xQueueCreate(15, sizeof(p2pMessage_t));
+
+    if (!p2p_rx_queue)
+    {
+        Serial.println("p2p_rx_queue Queue failed to initialize");
+    }
+
+    p2p_node_init(&p2p, &p2p_tx_queue, &p2p_rx_queue);
 }

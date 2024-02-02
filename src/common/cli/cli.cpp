@@ -4,6 +4,8 @@
 
 #include "../utilities/utilities.h"
 #include "../utilities/cli_utils.h"
+
+#include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
 
 #include "cli.h"
