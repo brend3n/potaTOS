@@ -1,18 +1,31 @@
 // Includes
 #include "task_info.h"
-#include "../config/board_config.h"
-#include "../common/utilities/utilities.h"
+// #include "../config/board_config.h"
+// #include "../common/utilities/utilities.h"
+
+// #include "mqtt/mqtt.h"
+// #include "button/button.h"
+// #include "temp_hum_sensor/temp_hum.h"
+// #include "ultra_sonic_sensor/ultra_sonic.h"
+// #include "../common/cli/cli.h"
+
+// #include "../common/p2p/p2p.h"
+// #include "../common/p2p/message_handling/p2p_tx.h"
+// #include "../common/p2p/message_handling/p2p_rx.h"
+// #include "../common/p2p/message_structure/p2p_message.h"
+#include "config/board_config.h"
+#include "utilities/utilities.h"
 
 #include "mqtt/mqtt.h"
 #include "button/button.h"
 #include "temp_hum_sensor/temp_hum.h"
 #include "ultra_sonic_sensor/ultra_sonic.h"
-#include "../common/cli/cli.h"
+#include "cli/cli.h"
 
-#include "../common/p2p/p2p.h"
-#include "../common/p2p/message_handling/p2p_tx.h"
-#include "../common/p2p/message_handling/p2p_rx.h"
-#include "../common/p2p/message_structure/p2p_message.h"
+#include "p2p/p2p.h"
+#include "message_handling/p2p_tx.h"
+#include "message_handling/p2p_rx.h"
+#include "message_structure/p2p_message.h"
 
 // Priority
 #define HELLO_MQTT_TASK_PRIORITY       3

@@ -6,16 +6,14 @@ PORT = /dev/ttyUSB0
 BAUD = 115200
 PROJECT_NAME = potaTOS
 
+CURRENT_DIR := $(shell pwd)
+INCLUDE_PATHS := $(shell ./get_include_dirs.sh src/)
+
 # Build target
 build:
 	@echo $(PORT)
-	$(ARDUINO_CLI) compile --verbose --fqbn $(BOARD) -p $(PORT) $(SKETCH)
-# $(ARDUINO_CLI) compile --verbose --fqbn $(BOARD) -p $(PORT) --libraries \
-# "$(PROJECT_NAME)/src, \
-# $(PROJECT_NAME)/src/common, \
-# $(PROJECT_NAME)/src/config, \
-# $(PROJECT_NAME)/src/tasks" \
-# $(SKETCH)
+# $(ARDUINO_CLI) compile --verbose --fqbn $(BOARD) -p $(PORT) $(SKETCH)
+	$(ARDUINO_CLI) compile --verbose --fqbn $(BOARD) -p $(PORT) --libraries $(INCLUDE_PATHS) $(SKETCH)
 
 # Upload target
 upload:
