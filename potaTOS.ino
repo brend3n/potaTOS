@@ -57,17 +57,8 @@ void setup()
 
 void loop()
 {
-  // TODO: Move this elsewhere so common code isnt reliant on board specific tasks
-  // if (!client.connected()) {
-  //   reconnect();
-  // }
-  // vTaskDelay(pdMSTOTICKS(2000));
   digitalWrite(LED_BUILTIN, HIGH);
   delay(2000);
   digitalWrite(LED_BUILTIN, LOW);
   delay(2000);
-
-
-  // TODO: Move this elsewhere so common code isnt reliant on board specific tasks
-  // client.loop();
 }

@@ -11,9 +11,13 @@ void mqtt_task(void *pvParameters)
   char stringy[100];
   strncpy(stringy, client_name, strlen(client_name));
   strncat(stringy, ": Hello\0", strlen(": Hello\0")+1);
+  client.loop();
 
   for(;;)
   {
+    if (!client.connected()) {
+      reconnect();
+    }
     client.publish(topic, stringy, strlen(stringy));
     client.subscribe(topic);
     Serial.printf("Sent from task\n");
