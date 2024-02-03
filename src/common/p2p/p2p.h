@@ -5,7 +5,7 @@
 #include "freertos/queue.h"
 
 
-typedef struct p2pNode
+typedef struct p2pNode_t
 {
     uint32_t node_id;
 
@@ -14,9 +14,11 @@ typedef struct p2pNode
 
     // Probably need to add things like sockets, etc.
 
-}p2pNode;
+}p2pNode_t;
 
-int32_t p2p_node_init(p2pNode* node, QueueHandle_t* txq, QueueHandle_t* rxq);
+
+void p2p_async_task(void *pvParameters);
+int32_t p2p_node_init(p2pNode_t* node, QueueHandle_t* txq, QueueHandle_t* rxq);
 
 // Node Discovery
 void discoverPeers();

@@ -6,31 +6,19 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
 
+#include "../p2p.h"
+
 void p2p_rx_task(void *pvParameters)
 {	
-	// QueueHandle_t* cmd_in_queue = (QueueHandle_t *)pvParameters;
-	// // ASSERT(cmd_in_queue != NULL);
-	// if (!cmd_in_queue)
-	// {
-	// 	Serial.println("cmd_in_queue failed to get");
-	// 	vTaskDelete(NULL);
-	// 	return;
-	// }
-	
-	// for(;;)
-	// {
-		
-	// 	if (xQueueReceive(*cmd_in_queue, cmd_in_buf, portMAX_DELAY) == pdPASS)
-	// 	{
-	// 		Serial.print("Command Rxed: <");
-	// 		Serial.print(cmd_in_buf);
-	// 		Serial.println(">");
-	// 		memset(cmd_in_buf, 0x00, sizeof(cmd_in_buf));
-	// 	}
+    p2pNode_t* node = (p2pNode_t*)pvParameters;
+    ASSERT(node != NULL);
 
-	// 	delay(freq_ms);
-	// }
+    for (;;)
+    {
+        Serial.println("Inside p2p_rx_task");
+        delay(1000);
+    }
 
-	// vTaskDelete(NULL);
+    vTaskDelete(NULL);
 }
 

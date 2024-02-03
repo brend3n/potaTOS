@@ -18,13 +18,7 @@ char cmd_in_buf[MAX_STRING_BUFFER_SIZE];
 void cli_input_task(void *pvParameters)
 {
 	QueueHandle_t* cmd_out_queue = (QueueHandle_t *)pvParameters;
-	// ASSERT(cmd_out_queue != NULL);
-	if (!cmd_out_queue)
-	{
-		Serial.println("cmd_out_queue failed to get");
-		vTaskDelete(NULL);
-		return;
-	}
+	ASSERT(cmd_out_queue != NULL);
 	
 	uint32_t ch_index = 0;
 
@@ -61,13 +55,7 @@ void cli_input_task(void *pvParameters)
 void cli_execute_task(void *pvParameters)
 {	
 	QueueHandle_t* cmd_in_queue = (QueueHandle_t *)pvParameters;
-	// ASSERT(cmd_in_queue != NULL);
-	if (!cmd_in_queue)
-	{
-		Serial.println("cmd_in_queue failed to get");
-		vTaskDelete(NULL);
-		return;
-	}
+	ASSERT(cmd_in_queue != NULL);
 	
 	for(;;)
 	{

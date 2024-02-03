@@ -5,6 +5,8 @@
 
 #include "p2p.h"
 
+#include "../utilities/utilities.h"
+
 
 /****
  *  P2P - Peer to Peer Network
@@ -19,7 +21,7 @@
  * 
 ****/
 
-int32_t p2p_node_init(p2pNode* node, QueueHandle_t* txq, QueueHandle_t* rxq)
+int32_t p2p_node_init(p2pNode_t* node, QueueHandle_t* txq, QueueHandle_t* rxq)
 {
     if (!node || !txq || !rxq)
     {
@@ -68,6 +70,15 @@ void receiveMessage(const char* peerAddress, const char* message)
 
 void p2p_async_task(void *pvParameters)
 {
-    
+    p2pNode_t* node = (p2pNode_t*)pvParameters;
+    ASSERT(node != NULL);
+
+    for (;;)
+    {
+        Serial.println("Inside p2p_async_task");
+        delay(1000);
+    }
+
+    vTaskDelete(NULL);
 }
 

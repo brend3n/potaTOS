@@ -31,7 +31,10 @@
     #define ULTRA_SONIC_PUB 0
     #define CLI_TASK 1
 
-    #define TASK_LIST { TASK_IN_CLI, TASK_EXEC_CLI, {0}}
+    #define TASK_LIST { \
+    /*Common Tasks */ TASK_CLI_INPUT, TASK_CLI_EXEC, TASK_P2P_TX, TASK_P2P_RX, TASK_P2P_ASYNC, \
+    {0} \
+    }
 #elif (BOARD_ID == 1)
     #define BOARD_STR "1"
     #define TEMP_HUM_PIN 8 

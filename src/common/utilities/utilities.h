@@ -8,10 +8,11 @@
 #define ASSERT(condition) \
     do { \
         if (!(condition)) { \
-            char temp_buf[100]; \
-            sprintf(temp_buf, "Assertion failed: %s, file %s, line %d\n", \
+            char temp_buf[150]; \
+            sprintf(temp_buf, "Assertion failed: %s\n\rFile: %s\n\rLine: %d\n\r", \
                     #condition, __FILE__, __LINE__); \
             Serial.println(temp_buf); \
+            vTaskDelete(NULL); \
         } \
     } while (0);
 

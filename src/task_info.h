@@ -5,19 +5,6 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
-// Task ENUMS
-enum task_enums
-{
-    HELLO_MQTT_TASK = 0,
-    BUTTON_PUBLISHER,
-    BUTTON_SUBSCRIBER,
-    TEMP_HUM_PUBLISHER,
-    ULTRA_SONIC_PUBLISHER,
-    CLI_INPUT,
-    CLI_EXEC,
-    NUM_TASKS
-};
-
 // Task Entry function
 typedef void (*entry_func_t)(void*);
 
@@ -29,7 +16,6 @@ typedef struct Task_Info_Struct
     void* params;
     uint8_t priority;
     TaskHandle_t *handle;
-    uint8_t task_enum;
 
 }Task_Info;
 

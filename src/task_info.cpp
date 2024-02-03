@@ -10,6 +10,8 @@
 #include "common/cli/cli.h"
 
 #include "common/p2p/p2p.h"
+#include "common/p2p/message_handling/p2p_tx.h"
+#include "common/p2p/message_handling/p2p_rx.h"
 #include "common/p2p/message_structure/p2p_message.h"
 
 // Priority
@@ -20,6 +22,9 @@
 #define ULTRA_SONIC_PUBLISHER_PRIORITY 3
 #define CLI_INPUT_PRIORITY             1
 #define CLI_EXEC_PRIORITY              1
+#define P2P_TX_PRIORITY                5
+#define P2P_RX_PRIORITY                5
+#define P2P_ASYNC_PRIORITY             5
 
 
 // Stack Size
@@ -30,6 +35,9 @@
 #define ULTRA_SONIC_PUBLISHER_STACK_SIZE 2* (1024 * 10)
 #define CLI_INPUT_STACK_SIZE             2*(1024 * 10)
 #define CLI_EXEC_STACK_SIZE              2* (1024 * 10)
+#define P2P_TX_STACK_SIZE                2*(1024 * 10)
+#define P2P_RX_STACK_SIZE                2* (1024 * 10)
+#define P2P_ASYNC_STACK_SIZE             2* (1024 * 10)
 
 // Task Handles
 TaskHandle_t hello_mqtt_handle;
@@ -39,11 +47,15 @@ TaskHandle_t temp_hum_pub_handle;
 TaskHandle_t ultra_sonic_pub_handle;
 TaskHandle_t cli_input_handle;
 TaskHandle_t cli_exec_handle;
+TaskHandle_t p2p_tx_handle;
+TaskHandle_t p2p_rx_handle;
+TaskHandle_t p2p_async_handle;
 
 QueueHandle_t temp_hum_ultra_sonic_queue;
 QueueHandle_t cli_cmd_queue;
 
-p2pNode p2p;
+
+p2pNode_t p2p;
 QueueHandle_t p2p_tx_queue;
 QueueHandle_t p2p_rx_queue;
 
@@ -55,8 +67,7 @@ QueueHandle_t p2p_rx_queue;
         HELLO_MQTT_TASK_STACK_SIZE, \
         NULL, \
         HELLO_MQTT_TASK_PRIORITY, \
-        &hello_mqtt_handle, \
-        HELLO_MQTT_TASK \
+        &hello_mqtt_handle \
     }
 
 #define TASK_BUTTON_PUB \
@@ -66,8 +77,7 @@ QueueHandle_t p2p_rx_queue;
         BUTTON_PUBLISHER_STACK_SIZE, \
         NULL, \
         BUTTON_PUBLISHER_PRIORITY, \
-        &button_pub_handle, \
-        BUTTON_PUBLISHER \
+        &button_pub_handle \
     }
 
 #define TASK_BUTTON_SUB \
@@ -77,8 +87,7 @@ QueueHandle_t p2p_rx_queue;
         BUTTON_SUBSCRIBER_STACK_SIZE, \
         NULL, \
         BUTTON_SUBSCRIBER_PRIORITY, \
-        &button_sub_handle, \
-        BUTTON_SUBSCRIBER \
+        &button_sub_handle \
     }
 
 #define TASK_TEMP_HUM_PUB \
@@ -88,8 +97,7 @@ QueueHandle_t p2p_rx_queue;
         TEMP_HUM_PUBLISHER_STACK_SIZE, \
         &temp_hum_ultra_sonic_queue, \
         TEMP_HUM_PUBLISHER_PRIORITY, \
-        &temp_hum_pub_handle, \
-        TEMP_HUM_PUBLISHER \
+        &temp_hum_pub_handle \
     }
 
 #define TASK_ULTRA_SONIC_PUB \
@@ -99,30 +107,57 @@ QueueHandle_t p2p_rx_queue;
         ULTRA_SONIC_PUBLISHER_STACK_SIZE, \
         &temp_hum_ultra_sonic_queue, \
         ULTRA_SONIC_PUBLISHER_PRIORITY, \
-        &ultra_sonic_pub_handle, \
-        ULTRA_SONIC_PUBLISHER \
+        &ultra_sonic_pub_handle \
     }
 
-#define TASK_IN_CLI \
+#define TASK_CLI_INPUT \
     { \
         &cli_input_task, \
         "cli_input_task", \
         CLI_INPUT_STACK_SIZE, \
         &cli_cmd_queue, \
         CLI_INPUT_PRIORITY, \
-        &cli_input_handle, \
-        CLI_INPUT \
+        &cli_input_handle \
     }
 
-#define TASK_EXEC_CLI \
+#define TASK_CLI_EXEC \
     { \
         &cli_execute_task, \
         "cli_exec_task", \
         CLI_EXEC_STACK_SIZE, \
         &cli_cmd_queue, \
         CLI_EXEC_PRIORITY, \
-        &cli_exec_handle, \
-        CLI_EXEC \
+        &cli_exec_handle \
+    }
+
+#define TASK_P2P_TX \
+    { \
+        &p2p_tx_task, \
+        "p2p_tx_task", \
+        P2P_TX_STACK_SIZE, \
+        &p2p, \
+        P2P_TX_PRIORITY, \
+        &p2p_tx_handle \
+    }
+
+#define TASK_P2P_RX \
+    { \
+        &p2p_rx_task, \
+        "p2p_rx_task", \
+        P2P_RX_STACK_SIZE, \
+        &p2p, \
+        P2P_RX_PRIORITY, \
+        &p2p_rx_handle \
+    }
+
+#define TASK_P2P_ASYNC \
+    { \
+        &p2p_async_task, \
+        "p2p_async_task", \
+        P2P_ASYNC_STACK_SIZE, \
+        &p2p, \
+        P2P_ASYNC_PRIORITY, \
+        &p2p_async_handle \
     }
 
 
@@ -132,8 +167,9 @@ Task_Info task_t [] = TASK_LIST;
 uint32_t register_tasks(void)
 {
     uint32_t res = 1;    
+    uint32_t num_tasks = sizeof(task_t) / sizeof(task_t[0]) - 1;
 
-    for (uint32_t i = 0; i < NUM_TASKS; i++)
+    for (uint32_t i = 0; i < num_tasks; i++)
     {
         if (task_t[i].handle)
         {
@@ -165,32 +201,16 @@ void setup_global_objects(void)
 {
     // Setting up the message queue
     temp_hum_ultra_sonic_queue = xQueueCreate(10, sizeof(float));
-    if(!temp_hum_ultra_sonic_queue)
-    {
-        Serial.println("temp_hum_ultra_sonic_queue Queue failed to intialize.");
-    }
+    ASSERT(temp_hum_ultra_sonic_queue != NULL);
 
     cli_cmd_queue = xQueueCreate(15, sizeof(char)*(MAX_STRING_BUFFER_SIZE));
-    // ASSERT(cli_cmd_queue != NULL);|
-
-    if (!cli_cmd_queue)
-    {
-        Serial.println("cli_cmd_queue Queue failed to initialize");
-    }
+    ASSERT(cli_cmd_queue != NULL);
 
     p2p_tx_queue = xQueueCreate(15, sizeof(p2pMessage_t));
-
-    if (!p2p_tx_queue)
-    {
-        Serial.println("p2p_tx_queue Queue failed to initialize");
-    }
+    ASSERT(p2p_tx_queue != NULL);
 
     p2p_rx_queue = xQueueCreate(15, sizeof(p2pMessage_t));
-
-    if (!p2p_rx_queue)
-    {
-        Serial.println("p2p_rx_queue Queue failed to initialize");
-    }
+    ASSERT(p2p_rx_queue != NULL);
 
     p2p_node_init(&p2p, &p2p_tx_queue, &p2p_rx_queue);
 }
