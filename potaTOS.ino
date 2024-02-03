@@ -9,7 +9,7 @@
 // Task Includes
 #include "src/tasks/button/button.h"
 #include "src/tasks/mqtt/mqtt.h"
-#include "src/task_info.h"
+#include "src/tasks/task_info.h"
 #include "src/common/utilities/utilities.h"
 
 // TODO: Move this elsewhere so common code isnt reliant on board specific tasks

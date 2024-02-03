@@ -1,7 +1,7 @@
 #ifndef BOARD_CONFIG_H
 #define BOARD_CONFIG_H
 
-#include "../task_info.h"
+#include "../tasks/task_info.h"
 
 // Define the number of boards and adjust this file accordingly
 #define NUM_BOARDS 1
