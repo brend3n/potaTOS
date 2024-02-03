@@ -19,6 +19,7 @@ typedef struct p2pNode_t
 
 void p2p_async_task(void *pvParameters);
 int32_t p2p_node_init(p2pNode_t* node, QueueHandle_t* txq, QueueHandle_t* rxq);
+int32_t change_ip_addr(p2pNode_t* node, const char* new_ip_addr);
 
 // Node Discovery
 void discoverPeers();

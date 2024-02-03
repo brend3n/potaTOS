@@ -10,12 +10,6 @@ PROJECT_NAME = potaTOS
 build:
 	@echo $(PORT)
 	$(ARDUINO_CLI) compile --verbose --fqbn $(BOARD) -p $(PORT) $(SKETCH)
-# $(ARDUINO_CLI) compile --verbose --fqbn $(BOARD) -p $(PORT) --libraries \
-# "$(PROJECT_NAME)/src, \
-# $(PROJECT_NAME)/src/common, \
-# $(PROJECT_NAME)/src/config, \
-# $(PROJECT_NAME)/src/tasks" \
-# $(SKETCH)
 
 # Upload target
 upload:
