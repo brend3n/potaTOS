@@ -1,3 +1,0 @@
-[submodule "import/freertos"]
-	path = import/freertos
-	url = git@github.com:FreeRTOS/FreeRTOS.git
