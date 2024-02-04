@@ -33,3 +33,21 @@ monitor:
 # Clean target
 clean:
 	$(ARDUINO_CLI) cache clean
+
+
+esp-start:
+	. $HOME/esp/esp-idf/export.sh
+
+esp-build:	
+	idf.py build
+
+esp-flash:
+	@echo $(PORT)
+	sudo chmod a+rw $(PORT)
+	idf.py -p $(PORT) flash
+
+esp-monitor:
+	@echo $(PORT)
+	sudo chmod a+rw $(PORT)
+	idf.py -p PORT monitor
+	
