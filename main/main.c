@@ -10,7 +10,7 @@
 #include "board_config.h"
 
 // Task Includes
-#include "task_info.h"
+#include "tasks/task_info.h"
 #include "utilities/utilities.h"
 
 void setup_tasks()
