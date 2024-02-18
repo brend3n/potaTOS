@@ -15,7 +15,7 @@ void p2p_rx_task(void *pvParameters)
     for (;;)
     {
         printf("Inside p2p_rx_task");
-        vTaskDelay(pdMS_TO_TICKS((1000);)
+        vTaskDelay(pdMS_TO_TICKS((1000)));
     }
 
     vTaskDelete(NULL);
