@@ -1,14 +1,16 @@
 // Includes
 #include "task_info.h"
-#include "../config/board_config.h"
-#include "../common/utilities/utilities.h"
+#include "board_config.h"
+#include "utilities/utilities.h"
 
-#include "../common/cli/cli.h"
+#include "cli/cli.h"
 
-#include "../common/p2p/p2p.h"
-#include "../common/p2p/message_handling/p2p_tx.h"
-#include "../common/p2p/message_handling/p2p_rx.h"
-#include "../common/p2p/message_structure/p2p_message.h"
+#include "p2p/p2p.h"
+#include "p2p/message_handling/p2p_tx.h"
+#include "p2p/message_handling/p2p_rx.h"
+#include "p2p/message_structure/p2p_message.h"
+
+#include "ota_updates/ota_updates.h"
 
 // Priority
 #define CLI_INPUT_PRIORITY             1
@@ -16,14 +18,17 @@
 #define P2P_TX_PRIORITY                5
 #define P2P_RX_PRIORITY                5
 #define P2P_ASYNC_PRIORITY             5
+#define OTA_UPDATE_PRIORITY            5
 
 
 // Stack Size
-#define CLI_INPUT_STACK_SIZE             2*(1024 * 10)
+#define CLI_INPUT_STACK_SIZE             2* (1024 * 10)
 #define CLI_EXEC_STACK_SIZE              2* (1024 * 10)
-#define P2P_TX_STACK_SIZE                2*(1024 * 10)
+#define P2P_TX_STACK_SIZE                2* (1024 * 10)
 #define P2P_RX_STACK_SIZE                2* (1024 * 10)
 #define P2P_ASYNC_STACK_SIZE             2* (1024 * 10)
+#define OTA_UPDATE_STACK_SIZE            2* (1024 * 8)
+
 
 // Task Handles
 TaskHandle_t cli_input_handle;
@@ -31,6 +36,7 @@ TaskHandle_t cli_exec_handle;
 TaskHandle_t p2p_tx_handle;
 TaskHandle_t p2p_rx_handle;
 TaskHandle_t p2p_async_handle;
+TaskHandle_t ota_update_handle;
 
 
 QueueHandle_t cli_cmd_queue;
@@ -89,6 +95,15 @@ QueueHandle_t p2p_rx_queue;
         &p2p_async_handle \
     }
 
+#define TASK_OTA_UPDATE \
+    { \
+        &ota_update_task, \
+        "ota_update_task", \
+        OTA_UPDATE_STACK_SIZE, \
+        NULL, \
+        OTA_UPDATE_PRIORITY, \
+        &ota_update_handle \
+    }
 
 Task_Info task_t [] = TASK_LIST;
 

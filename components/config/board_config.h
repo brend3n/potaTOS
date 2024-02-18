@@ -21,7 +21,7 @@
     #define BOARD_STR "0"
 
     #define TASK_LIST { \
-    /*Common Tasks */ TASK_CLI_INPUT, TASK_CLI_EXEC, TASK_P2P_TX, TASK_P2P_RX, TASK_P2P_ASYNC, \
+    /*Common Tasks */ TASK_CLI_INPUT, TASK_CLI_EXEC, TASK_P2P_TX, TASK_P2P_RX, TASK_P2P_ASYNC, TASK_OTA_UPDATE, \
     {0} \
     }
 #else

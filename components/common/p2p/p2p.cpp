@@ -19,7 +19,6 @@
  *
  * 
 ****/
-
 int32_t p2p_node_init(p2pNode_t* node, QueueHandle_t* txq, QueueHandle_t* rxq)
 {
     if (!node || !txq || !rxq)
@@ -35,7 +34,7 @@ int32_t p2p_node_init(p2pNode_t* node, QueueHandle_t* txq, QueueHandle_t* rxq)
 
 int32_t change_ip_addr(p2pNode_t* node, const char* new_ip_addr)
 {
-
+    return 0;
 }
 
 // Node Discovery
