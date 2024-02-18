@@ -15,7 +15,6 @@
 #include "task_info.h"
 #include "utilities.h"
 
-#include <Arduino.h>
 
 void setup_tasks()
 {
@@ -46,9 +45,7 @@ extern "C" void app_main(void)
     do_setup();
 
     for(;;) 
-    {
-        Serial.println("Hello, ESP32!\n");
+    {              
         vTaskDelay(pdMS_TO_TICKS(1000)); // Delay for 1 second
     }
-    
 }

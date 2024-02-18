@@ -17,6 +17,8 @@
 // Over the air updates include
 #include "ota_updates.h"
 
+#include "watchdog.h"
+
 // Priority
 #define CLI_INPUT_PRIORITY             1
 #define CLI_EXEC_PRIORITY              1
@@ -24,6 +26,7 @@
 #define P2P_RX_PRIORITY                5
 #define P2P_ASYNC_PRIORITY             5
 #define OTA_UPDATE_PRIORITY            5
+#define WATCH_DOG_PRIORITY             5
 
 
 // Stack Size
@@ -33,6 +36,7 @@
 #define P2P_RX_STACK_SIZE                2* (1024 * 10)
 #define P2P_ASYNC_STACK_SIZE             2* (1024 * 10)
 #define OTA_UPDATE_STACK_SIZE            2* (1024 * 8)
+#define WATCH_DOG_STACK_SIZE             2* (1024 * 8)
 
 
 // Task Handles
@@ -42,6 +46,7 @@ TaskHandle_t p2p_tx_handle;
 TaskHandle_t p2p_rx_handle;
 TaskHandle_t p2p_async_handle;
 TaskHandle_t ota_update_handle;
+TaskHandle_t watch_dog_handle;
 
 
 QueueHandle_t cli_cmd_queue;
@@ -110,6 +115,17 @@ QueueHandle_t p2p_rx_queue;
         &ota_update_handle \
     }
 
+#define TASK_WATCHDOG \
+    { \
+        &watchdog_task, \
+        "watchdog_task", \
+        WATCH_DOG_STACK_SIZE, \
+        NULL, \
+        WATCH_DOG_PRIORITY, \
+        &watch_dog_handle \
+    }
+    
+
 Task_Info task_t [] = TASK_LIST;
 
 // Returns 1 if all tasks registered, else returns 0
@@ -136,6 +152,11 @@ uint32_t register_tasks(void)
                 Serial.print("Failed to register ");
                 Serial.println(task_t[i].name);
                 // printf("Failed to register %s\n", task_t[i].name);                                
+            }
+            else
+            {
+                Serial.print("Registered: ");
+                Serial.println(task_t[i].name);
             }
             
             res &= ret_create;

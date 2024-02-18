@@ -28,7 +28,7 @@
     #define BOARD_STR "1"
 
     #define TASK_LIST { \
-    /*Common Tasks */ TASK_CLI_INPUT, TASK_CLI_EXEC, \
+    /*Common Tasks */ TASK_CLI_INPUT, TASK_CLI_EXEC, TASK_WATCHDOG,  \
     {0} \
     }
 #else

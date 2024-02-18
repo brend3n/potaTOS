@@ -36,12 +36,10 @@ function main()
     ;;
     "monitor")
         echo -e "Monitoring..."
-        echo -e "Not yet implemented"
         idf.py -p $PORT monitor
     ;;
     "flash")
-        echo -e "Flashing..."
-        echo -e "Not yet implemented"
+        echo -e "Flashing..."        
         idf.py -p $PORT flash
     ;;
     *)

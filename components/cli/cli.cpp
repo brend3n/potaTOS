@@ -9,6 +9,8 @@
 
 #include "Arduino.h"
 
+#include "esp_task_wdt.h"
+
 #include "cli.h"
 
 static const uint32_t freq_ms = 50;
@@ -20,13 +22,16 @@ void cli_input_task(void *pvParameters)
 {
 	QueueHandle_t* cmd_out_queue = (QueueHandle_t *)pvParameters;
 	ASSERT(cmd_out_queue != NULL);
+
+	// Add the current task to the watchdog timer.
+    esp_task_wdt_add(NULL);
 	
 	uint32_t ch_index = 0;
 
 	for(;;)
 	{
 
-		while(!Serial.available()){};
+		while(!Serial.available()){esp_task_wdt_reset();};
 
 		char in_char = Serial.read();
 
@@ -50,6 +55,7 @@ void cli_input_task(void *pvParameters)
 		vTaskDelay(pdMS_TO_TICKS(freq_ms));
 	}
 
+	esp_task_wdt_delete(NULL);
 	vTaskDelete(NULL);
 }
 
