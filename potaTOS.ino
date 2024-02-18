@@ -39,14 +39,7 @@ void setup()
   // Initialize Serial for Debugging
   serial_init();
 
-  // TODO: Move this elsewhere so common code isnt reliant on board specific tasks
-  // Initialize MQTT
-  // mqtt_init();
-
-  // Allow the hardware to sort itself out
-  // vTaskDelay(pdMSTOTICKS(1500));
   delay(1500);
-
 
   // TODO: Move this elsewhere so common code isnt reliant on board specific tasks
   setup_global_objects();
