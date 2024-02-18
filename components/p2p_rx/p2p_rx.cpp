@@ -4,8 +4,9 @@
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
+#include "Arduino.h"
 
-#include "../p2p.h"
+#include "p2p.h"
 
 void p2p_rx_task(void *pvParameters)
 {	
@@ -14,7 +15,7 @@ void p2p_rx_task(void *pvParameters)
 
     for (;;)
     {
-        printf("Inside p2p_rx_task");
+        Serial.println("Inside p2p_rx_task");
         vTaskDelay(pdMS_TO_TICKS((1000)));
     }
 

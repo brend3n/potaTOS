@@ -1,16 +1,21 @@
 // Includes
 #include "task_info.h"
 #include "board_config.h"
-#include "utilities/utilities.h"
+#include "utilities.h"
 
-#include "cli/cli.h"
+#include "Arduino.h"
 
-#include "p2p/p2p.h"
-#include "p2p/message_handling/p2p_tx.h"
-#include "p2p/message_handling/p2p_rx.h"
-#include "p2p/message_structure/p2p_message.h"
+// CLI
+#include "cli.h"
 
-#include "ota_updates/ota_updates.h"
+// peer-to-peer includes
+#include "p2p.h"
+#include "p2p_tx.h"
+#include "p2p_rx.h"
+#include "p2p_message.h"
+
+// Over the air updates include
+#include "ota_updates.h"
 
 // Priority
 #define CLI_INPUT_PRIORITY             1
@@ -128,7 +133,9 @@ uint32_t register_tasks(void)
 
             if (ret_create != pdTRUE)
             {
-                printf("Failed to register %s\n", task_t[i].name);                                
+                Serial.print("Failed to register ");
+                Serial.println(task_t[i].name);
+                // printf("Failed to register %s\n", task_t[i].name);                                
             }
             
             res &= ret_create;
@@ -142,7 +149,6 @@ uint32_t register_tasks(void)
 void setup_global_objects(void)
 {
     // Setting up the message queue
-
     cli_cmd_queue = xQueueCreate(15, sizeof(char)*(MAX_STRING_BUFFER_SIZE));
     ASSERT(cli_cmd_queue != NULL);
 

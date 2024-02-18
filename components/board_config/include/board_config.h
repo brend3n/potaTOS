@@ -8,8 +8,8 @@
 
 // Board Roles
 /* Uncomment one of them */
-#define BOARD_ID 0
-// #define BOARD_ID 1
+// #define BOARD_ID 0
+#define BOARD_ID 1
 // #define BOARD_ID 2
 // #define BOARD_ID 3
 // #define BOARD_ID 4
@@ -22,6 +22,13 @@
 
     #define TASK_LIST { \
     /*Common Tasks */ TASK_CLI_INPUT, TASK_CLI_EXEC, TASK_P2P_TX, TASK_P2P_RX, TASK_P2P_ASYNC, TASK_OTA_UPDATE, \
+    {0} \
+    }
+#elif (BOARD_ID == 1)
+    #define BOARD_STR "1"
+
+    #define TASK_LIST { \
+    /*Common Tasks */ TASK_CLI_INPUT, TASK_CLI_EXEC, \
     {0} \
     }
 #else
