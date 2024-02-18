@@ -30,9 +30,9 @@ void cli_input_task(void *pvParameters)
 
 		if (in_char == '\n' || in_char == 10 || in_char == 0 || (int)in_char == 13)
 		{			
-			Serial.print("\n\r");
-			Serial.print("Command entered: ");
-			Serial.println(cmd_out_buf);
+			printf("\n\r");
+			printf("Command entered: ");
+			printf(cmd_out_buf);
 			xQueueSend(*cmd_out_queue, cmd_out_buf, portMAX_DELAY);
 			memset(cmd_out_buf, 0x00, sizeof(cmd_out_buf));
 			ch_index = 0;
@@ -44,8 +44,8 @@ void cli_input_task(void *pvParameters)
 			cmd_out_buf[ch_index++] = in_char;
 		}
 
-		Serial.print(in_char);
-		delay(freq_ms);
+		printf(in_char);
+		vTaskDelay(pdMS_TO_TICKS(freq_ms));
 	}
 
 	vTaskDelete(NULL);
@@ -61,13 +61,13 @@ void cli_execute_task(void *pvParameters)
 		
 		if (xQueueReceive(*cmd_in_queue, cmd_in_buf, portMAX_DELAY) == pdPASS)
 		{
-			Serial.print("Command Rxed: <");
-			Serial.print(cmd_in_buf);
-			Serial.println(">");
+			printf("Command Rxed: <");
+			printf(cmd_in_buf);
+			printf(">");
 			memset(cmd_in_buf, 0x00, sizeof(cmd_in_buf));
 		}
 
-		delay(freq_ms);
+		vTaskDelay(pdMS_TO_TICKS(freq_ms));
 	}
 
 	vTaskDelete(NULL);
