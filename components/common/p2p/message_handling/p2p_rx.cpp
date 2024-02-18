@@ -1,4 +1,3 @@
-#include <Arduino.h>
 #include <stdio.h>
 #include <string.h>
 #include "../../utilities/utilities.h"
@@ -15,8 +14,8 @@ void p2p_rx_task(void *pvParameters)
 
     for (;;)
     {
-        Serial.println("Inside p2p_rx_task");
-        delay(1000);
+        printf("Inside p2p_rx_task");
+        vTaskDelay(pdMS_TO_TICKS((1000);)
     }
 
     vTaskDelete(NULL);

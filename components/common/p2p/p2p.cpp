@@ -6,6 +6,8 @@
 
 #include "../utilities/utilities.h"
 
+#include "freertos/FreeRTOS.h"
+
 
 /****
  *  P2P - Peer to Peer Network
@@ -23,7 +25,7 @@ int32_t p2p_node_init(p2pNode_t* node, QueueHandle_t* txq, QueueHandle_t* rxq)
 {
     if (!node || !txq || !rxq)
     {
-        Serial.println("Error with node or txq or rxq in p2p_node_init");
+        printf("Error with node or txq or rxq in p2p_node_init");
         return -1;
     }
     node->rx_queue = rxq;
@@ -79,8 +81,8 @@ void p2p_async_task(void *pvParameters)
 
     for (;;)
     {
-        Serial.println("Inside p2p_async_task");
-        delay(1000);
+        printf("Inside p2p_async_task");
+        vTaskDelay(pdMS_TO_TICKS(1000));
     }
 
     vTaskDelete(NULL);
