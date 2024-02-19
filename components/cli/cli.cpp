@@ -31,7 +31,11 @@ void cli_input_task(void *pvParameters)
 	for(;;)
 	{
 
-		while(!Serial.available()){esp_task_wdt_reset();};
+		while(!Serial.available())
+		{
+			vTaskDelay(pdMS_TO_TICKS(100));
+			esp_task_wdt_reset();
+		};
 
 		char in_char = Serial.read();
 

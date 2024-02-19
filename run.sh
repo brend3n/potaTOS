@@ -40,7 +40,8 @@ function main()
     ;;
     "flash")
         echo -e "Flashing..."        
-        idf.py -p $PORT flash
+        # idf.py -p $PORT flash
+        /home/brenden/.espressif/python_env/idf5.1_py3.10_env/bin/python ../../../esp/esp-idf/components/esptool_py/esptool/esptool.py -p $PORT -b 460800 --before default_reset --after hard_reset --chip esp32s2  write_flash --flash_mode dio --flash_size 2MB --flash_freq 80m 0x1000 build/bootloader/bootloader.bin 0x8000 build/partition_table/partition-table.bin 0x10000 build/potatos.bin
     ;;
     *)
         help

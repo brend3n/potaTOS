@@ -3,3 +3,5 @@ misc
 __pycache__
 
 build
+
+managed_components/
