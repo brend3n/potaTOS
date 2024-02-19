@@ -33,7 +33,7 @@ void cli_input_task(void *pvParameters)
 
 		while(!Serial.available())
 		{
-			vTaskDelay(pdMS_TO_TICKS(100));
+			vTaskDelay(pdMS_TO_TICKS(10));
 			esp_task_wdt_reset();
 		};
 
